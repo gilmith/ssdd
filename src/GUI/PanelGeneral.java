@@ -6,16 +6,23 @@ package GUI;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
+
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JLabel;
+
+import util.Interfaces.ServicioAutenticacionInterface;
+import util.Loaders.serverLoader;
 import util.LogManager.LogObj;
 
 
 /**
- * añado los elementos del panel, se llaman por mvc modelo vista controlador
+ * Panel inicial de la aplicacion. 
+ * @author Jacobo Geada Ansino
  *
  */
 public class PanelGeneral extends JPanel implements ActionListener{
@@ -29,15 +36,17 @@ public class PanelGeneral extends JPanel implements ActionListener{
 	private JPasswordField password;
 	private JButton ok, nuevo_usuario;
 	private LogObj logUsuario;
+	private String ip;
 	
-	
-	public PanelGeneral(String titulo){
+	public PanelGeneral(String titulo, String ip){
+		this.ip = ip;
 		setLayout(new GridLayout(3,3));
-		logUsuario = new LogObj("/tmp/usuario.log");
+		logUsuario = new LogObj("usuario.log");
 		crearElementos();
 	}
 	
-	
+
+
 	private void crearElementos(){
 		
 		usuario = new JTextField(15);
@@ -61,14 +70,35 @@ public class PanelGeneral extends JPanel implements ActionListener{
 		
 	}
 
+	/**
+	 * Los botones estan controlados por actionPerformed en GRASP controlador
+	 */
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == ok){
-			logUsuario.write("el usuario " + usuario.getText() + "intenta entrar al server");
+			logUsuario.write("el usuario " + usuario.getText() + " intenta entrar al server");
+			try {
+				logUsuario.write("llamada al objeto remoto de autentificacion");
+				//ServicioAutenticacionInterface auth =  serverLoader.getAutentificacion(ip).autentificacion(nick, password);
+				if (serverLoader.getAutentificacion(ip).autentificacion(usuario.getText(), String.valueOf(password.getPassword()))){
+					logUsuario.write("acceso concedido al servidor, arranque de la ventana de mensajeria");
+					VentanaAplicacion ventanaAplicacion = new VentanaAplicacion(usuario.getText(), ip);
+					ventanaAplicacion.setVisible(true);
+				} else {
+					logUsuario.write("error en usuario/password");
+					JOptionPane.showMessageDialog(getParent(), "Error usuario/password", "Error de autentificacion", JOptionPane.ERROR_MESSAGE);
+				}
+					
+				
+			} catch (RemoteException e1) {
+				e1.printStackTrace();
+			}
+				
 		} else if (e.getSource() == nuevo_usuario){
 			logUsuario.write("alta de nuevo usuario");
-			Alta alta = new Alta("ventana de alta de nuevo usuario");
+			Alta alta = new Alta("ventana de alta de nuevo usuario", ip);
+			alta.setVisible(true);
 		}
 		
 	}

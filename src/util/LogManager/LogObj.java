@@ -9,22 +9,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author jake
+ * Log manager para el seguimiento de la aplicacion.
+ * @author Jacobo Geada Ansino
  *
  */
 public class LogObj{
 	
 	private static Logger log;
 	
-	
 	/**
 	 * Constructor de log para cualquiera de las clases que conforman el cliente
 	 * El parametro que se le pasa es el nombre del proceso que esta llamando al Log, creara
 	 * un fichero proceso.txt en /tmp en linux y en C:/practica en windows
-	 * @param proceso
+	 * @param ruta
 	 */
 	
 	public LogObj(String ruta) {
+		String OS;
+		if (System.getProperty("os.name").contains("Windows")) {
+			OS = "C:/practica/";
+		} else {
+			OS = System.getProperty("user.home") + "/practica/";
+		}
+		ruta = OS + ruta;
 		log = Logger.getLogger(ruta);
 		log.setLevel(Level.INFO);
 		try {
@@ -53,6 +60,7 @@ public class LogObj{
 		}
 	}
 	
+
 	
 	
 

@@ -1,0 +1,6 @@
+grant  {
+    permission java.security.AllPermission;.
+    permission java.util.PropertyPermission "user.home" "read"
+    permission java.util.PropertyPermission "user.home" "write"
+    
+};

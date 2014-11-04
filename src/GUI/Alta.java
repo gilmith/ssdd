@@ -1,29 +1,31 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 public class Alta extends JFrame {
 
-	private JPanel contentPane;
-
+	/**
+	 * Clase para lanzar la ventana con el alta del usuario.
+	 * 
+	 */
+	private static final long serialVersionUID = 9073836937014589985L;
+	private PanelAlta panelAlta;
+	private static AltaObj datosAlta;
+	private String ip;
 	/**
 	 * Create the frame.
 	 * @param string 
+	 * @param ip 
 	 */
-	public Alta(String string) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public Alta(String string, String ip) {
+		this.ip = ip;
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setTitle(string);
-		setBounds(100, 100, 450, 300);
-		setVisible(true);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
+		datosAlta = new AltaObj();
+		setBounds(100, 100, 1075, 245);
+		panelAlta = new PanelAlta(datosAlta, ip);
+		this.add(panelAlta);
 	}
+
 
 }
